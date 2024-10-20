@@ -1,8 +1,12 @@
-# Motivo de este repositorio
+# Demo Protegiendo GCP Api Gateway usando Service Account
 
-Este repositorio es una demostración para exponer una API desplegada en Cloud Run y exponerla en Api Gateway, protegiendp el acceso a traves de una cuenta de servivio (service account).
+## Motivo de este repositorio
+
+Este repositorio es una demostración para exponer una API desplegada en Cloud Run y exponerla en Api Gateway, protegiendo el acceso a traves de una cuenta de servivio (service account).
 
 Caso de uso para una Cuenta de Servicio: Proteger el aceso a una API y permitir que otros servicios consuman el API protegida usando un token el cual está firmado por la private key de la cuenta de servicio. [Para saber más](https://cloud.google.com/api-gateway/docs/authenticate-service-account)
+
+A pesar de que el objetivo principal de este repositorio es usar una cuenta de servicio para proteger el acceso del Api que se expone a través de Api Gateway cuando tienes un Sitio Web estático (típico SPA sea en react, vue, etc) no es aconsejable porque tendrías que exponer el archivo que contiene la llave privada. Para estos casos, existen otras soluciones como usar Firbase Authentication o un Api Key. En este caso por razones de simplicidad del demo yo he usado un Api key, por esta razón notarás que en la sección securityDefinitions del archivo *open-api-api-gateway.yaml* existe una definición para *api_key*. Si quieres saber más como crear un Api Key para un Api Gateway y restringir su uso para tu servicio te recomiendo mirar la [documentación](https://cloud.google.com/api-gateway/docs/authenticate-api-keys)
 
 ## Preparación
 
@@ -66,7 +70,7 @@ gcloud run deploy cr-products-api \
 
 **Nota:** El parametro *allow-unauthenticated* permite que cualquiera pueda aceder al API desplegada, por ahora está bien para probar el despliegue, pero luego necesitarás ejecutar el comando ***gcloud run services update*** sin el parametro *allow-unauthenticated*
 
-## Configuración de API Gateway
+## Configuración de GCP API Gateway
 
 En resumen para crear un API Gateway se necesitan 7 pasos:
 
@@ -75,7 +79,7 @@ En resumen para crear un API Gateway se necesitan 7 pasos:
 3. Crear una Cuenta de Servicio
 4. Asignar los roles: *run.invoker* y *roles/iam.serviceAccountTokenCreator*
 5. Crear una configuracion usando un archivo Open Api .yaml con el comando ***gcloud api-gateway api-configs create***
-6. Crear una private key de la cuenta de servicio y descargarla con el comando ***gcloud iam service-accounts keys create*** Este archivo es el que deberás utilizar para generar el token que se enviará en cada solicitud, ver el codigo en [generate_token_demo.py] o tambien la [documentación](https://cloud.google.com/api-gateway/docs/authenticate-service-account#making_an_authenticated_request)
+6. Crear una private key de la cuenta de servicio y descargarla con el comando ***gcloud iam service-accounts keys create*** Este archivo es el que deberás utilizar para generar el token que se enviará en cada solicitud, ver el codigo en [generate_token_demo.py](generate_token_demo.py) o también la [documentación](https://cloud.google.com/api-gateway/docs/authenticate-service-account#making_an_authenticated_request)
 7. Asignar la configuración al Gateway con el comando ***gcloud api-gateway gateways update***
 
 ***Nota:*** El token generado deberás enviarlo en el header, revisa el ejemplo en el link del paso 6.

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gcp-apigateway-products-api"
+version = "0.1.0"
+description = ""
+authors = ["Jhony Rivero <jhonyrivero@belcorp.biz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+faker = "^30.6.0"
+fastapi = "^0.115.2"
+pydantic = "^2.9.2"
+pydantic-settings = "^2.6.0"
+asyncio = "^3.4.3"
+uvicorn = "^0.32.0"
+faker-commerce = "^1.0.4"
+google-auth = "^2.35.0"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

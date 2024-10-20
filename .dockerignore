@@ -1,0 +1,14 @@
+# Ignorar archivos y directorios innecesarios
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+.env
+.DS_Store
+.vscode
+.idea
+tests/

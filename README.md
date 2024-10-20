@@ -2,12 +2,13 @@
 
 Este repositorio es una demostración para exponer una API desplegada en Cloud Run y exponerla en Api Gateway, protegiendp el acceso a traves de una cuenta de servivio (service account).
 
+Caso de uso para una Cuenta de Servicio: Proteger el aceso a una API y permitir que otros servicios consuman el API protegida usando un token el cual está firmado por la private key de la cuenta de servicio. [Para saber más](https://cloud.google.com/api-gateway/docs/authenticate-service-account)
+
 ## Preparación
 
-Una vez clone este repositorio deberas ejecutar
+Una vez clones este repositorio deberas ejecutar
 
 ```bash
-poetry init
 poetry install
 ```
 
@@ -53,7 +54,7 @@ Subir la imagen Docker a Google Container Registry
 docker push gcr.io/[PROJECT_ID]/products-api:[VERSION]
 ```
 
-Desplegar la imagen en Cloud Run
+Desplegar la imagen en **Cloud Run**
 
 ```bash
 gcloud run deploy cr-products-api \
@@ -63,7 +64,21 @@ gcloud run deploy cr-products-api \
     --allow-unauthenticated
 ```
 
-### Configuración de API Gateway
+**Nota:** El parametro *allow-unauthenticated* permite que cualquiera pueda aceder al API desplegada, por ahora está bien para probar el despliegue, pero luego necesitarás ejecutar el comando ***gcloud run services update*** sin el parametro *allow-unauthenticated*
+
+## Configuración de API Gateway
+
+En resumen para crear un API Gateway se necesitan 7 pasos:
+
+1. Crear un API con el comando ***gcloud api-gateway apis create***
+2. Crear un Gateway para el api del punto anterior, comando: ***gcloud api-gateway gateways create***
+3. Crear una Cuenta de Servicio
+4. Asignar los roles: *run.invoker* y *roles/iam.serviceAccountTokenCreator*
+5. Crear una configuracion usando un archivo Open Api .yaml con el comando ***gcloud api-gateway api-configs create***
+6. Crear una private key de la cuenta de servicio y descargarla con el comando ***gcloud iam service-accounts keys create*** Este archivo es el que deberás utilizar para generar el token que se enviará en cada solicitud, ver el codigo en [generate_token_demo.py] o tambien la [documentación](https://cloud.google.com/api-gateway/docs/authenticate-service-account#making_an_authenticated_request)
+7. Asignar la configuración al Gateway con el comando ***gcloud api-gateway gateways update***
+
+***Nota:*** El token generado deberás enviarlo en el header, revisa el ejemplo en el link del paso 6.
 
 Crear una nueva API
 
@@ -71,7 +86,7 @@ Crear una nueva API
 gcloud api-gateway apis create api-products-api --project=[PROJECT_ID]
 ```
 
-Crear una configuración de API
+Crear una configuración del API usando el achivo [open-api-api-gateway.yaml](open-api-api-gateway.yaml). En este archivo deberás agregar el valor de la cuenta de servicio que crearás más adelante.
 
 ```bash
 gcloud api-gateway api-configs create agcnf-products-api \
@@ -80,7 +95,7 @@ gcloud api-gateway api-configs create agcnf-products-api \
 --backend-auth-service-account=[SERVICE_ACCOUNT_EMAIL]
 ```
 
-Crear un gateway de API
+Crear un Gateway
 
 ```bash
 gcloud api-gateway gateways create ag-products-api \

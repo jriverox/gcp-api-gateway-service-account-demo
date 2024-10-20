@@ -163,4 +163,5 @@ cython_debug/
 
 sa-products-api.json
 open-api-api-gateway copy.yaml
+.DS_Store
 

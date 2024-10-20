@@ -162,4 +162,5 @@ cython_debug/
 #.idea/
 
 sa-products-api.json
+open-api-api-gateway copy.yaml
 

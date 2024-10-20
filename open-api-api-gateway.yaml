@@ -13,7 +13,7 @@ x-google-backend:
   path_translation: APPEND_PATH_TO_ADDRESS
   deadline: 300
 x-google-endpoints:
-  - name: api-products-api-2qd81btua34ll.apigateway.jrx-demo-cloud-run.cloud.goog
+  - name: api-products-api-2qd81btua34ll.apigateway.[PROJECT_ID].cloud.goog
     allowCors: true
 paths:
   /api/products:
@@ -111,5 +111,5 @@ securityDefinitions:
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
-    x-google-issuer: "sa-products-api@jrx-demo-cloud-run.iam.gserviceaccount.com"
-    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/sa-products-api@jrx-demo-cloud-run.iam.gserviceaccount.com"
+    x-google-issuer: [SERVICE_ACCOUNT_EMAIL]
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/[SERVICE_ACCOUNT_EMAIL]"
